@@ -3,16 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Claude's Bubble Bath</title>
+<title>TheClaudeSpa™</title>
 <style>
   :root {
     --water-top: #bfe9ff;
     --water-bottom: #6cc4f0;
-    --claude: #e8775a;
     --text: #1d3b53;
+    --panel: rgba(255,255,255,.55);
+    --meter-bg: rgba(29,59,83,.15);
+    --meter: linear-gradient(90deg, #ff9fd0, #8fdcff, #b6ffcf);
   }
   @media (prefers-color-scheme: dark) {
-    :root { --water-top: #173a57; --water-bottom: #0b1f33; --text: #d7ecff; }
+    :root {
+      --water-top: #173a57; --water-bottom: #0b1f33; --text: #d7ecff;
+      --panel: rgba(10,30,50,.55); --meter-bg: rgba(215,236,255,.15);
+    }
   }
   html, body { margin: 0; height: 100%; overflow: hidden; }
   body {
@@ -20,74 +25,249 @@
     font-family: system-ui, sans-serif;
     color: var(--text);
     user-select: none;
+    touch-action: none;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ctext y='32' font-size='32'%3E🧽%3C/text%3E%3C/svg%3E") 20 20, pointer;
   }
   #claude {
-    position: fixed; left: 50%; top: 50%;
-    width: 120px; height: 120px;
+    position: fixed; left: 50%; top: 55%;
+    width: min(70vw, 60vh, 340px); aspect-ratio: 1;
     transform: translate(-50%, -50%);
+    overflow: visible;
+    z-index: 2;
+  }
+  #body {
+    transform-box: view-box; transform-origin: center;
     animation: wiggle 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 12px rgba(255,255,255,.6));
   }
   @keyframes wiggle {
-    0%,100% { transform: translate(-50%, -50%) rotate(-6deg); }
-    50%     { transform: translate(-50%, -54%) rotate(6deg); }
+    0%,100% { transform: rotate(-5deg); }
+    50%     { transform: rotate(5deg) translateY(-2px); }
   }
+  #claude.happy #body { animation: happy .8s ease-in-out infinite; }
+  @keyframes happy {
+    0%,100% { transform: rotate(-10deg) scale(1); }
+    50%     { transform: rotate(10deg) scale(1.08); }
+  }
+  .ray-line { transition: stroke .15s; }
+  .ray.clean .ray-line { filter: drop-shadow(0 0 2px #fff); }
+
   .bubble {
-    position: fixed; bottom: -80px; border-radius: 50%; cursor: pointer;
+    position: fixed; bottom: -80px; border-radius: 50%; cursor: inherit; z-index: 1;
     background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.95) 0 8%,
                 rgba(255,255,255,.25) 20%, rgba(180,220,255,.15) 60%,
                 rgba(255,180,230,.35) 100%);
     box-shadow: inset 0 0 8px rgba(255,255,255,.7);
     animation: rise linear forwards;
   }
-  @keyframes rise {
-    to { transform: translate(var(--drift), calc(-100vh - 160px)); }
-  }
+  @keyframes rise { to { transform: translate(var(--drift), calc(-100vh - 160px)); } }
   .pop { animation: pop .2s ease-out forwards !important; }
   @keyframes pop { to { transform: scale(1.6); opacity: 0; } }
-  #hud {
-    position: fixed; top: 16px; left: 16px; right: 16px;
-    text-align: center; font-size: 1.1rem;
+
+  .suds {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 3;
+    background: radial-gradient(circle at 35% 35%, #fff 0 25%, rgba(255,255,255,.7) 50%, rgba(255,255,255,0) 72%);
+    animation: suds 1.1s ease-out forwards;
   }
+  @keyframes suds {
+    from { transform: translate(-50%, -50%) scale(.4); opacity: 1; }
+    to   { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.3); opacity: 0; }
+  }
+  .sparkle {
+    position: fixed; pointer-events: none; z-index: 4; font-size: 22px;
+    animation: sparkle 1.2s ease-out forwards;
+  }
+  @keyframes sparkle {
+    from { transform: translate(-50%, -50%) scale(.3) rotate(0); opacity: 1; }
+    to   { transform: translate(-50%, -120%) scale(1.4) rotate(90deg); opacity: 0; }
+  }
+
+  #hud {
+    position: fixed; top: 16px; left: 16px; right: 16px; z-index: 5;
+    max-width: 520px; margin: 0 auto; padding: 12px 16px;
+    background: var(--panel); border-radius: 16px; backdrop-filter: blur(6px);
+    text-align: center;
+  }
+  #hud h1 { margin: 0 0 4px; font-size: 1.4rem; }
+  #hint { margin: 0 0 10px; font-size: .95rem; opacity: .85; }
+  #meter { height: 14px; border-radius: 7px; background: var(--meter-bg); overflow: hidden; }
+  #fill { height: 100%; width: 0; background: var(--meter); transition: width .2s; }
+  #stats { margin-top: 8px; font-size: .9rem; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  #mud {
+    display: none; margin: 10px auto 0; padding: 6px 14px; border: 0; border-radius: 999px;
+    background: #8a5a3c; color: #fff; font: inherit; cursor: pointer;
+  }
+  #hud.done #mud { display: inline-block; }
 </style>
 </head>
 <body>
-<div id="hud">🫧 Bubble bath in progress · cleanliness: <b id="clean">0</b>% · popped: <b id="popped">0</b></div>
+<div id="hud">
+  <h1>🫧 TheClaudeSpa™</h1>
+  <p id="hint">Drag the sponge along my tentacles to scrub them clean</p>
+  <div id="meter"><div id="fill"></div></div>
+  <div id="stats">
+    <span>Cleanliness: <b id="clean">0</b>%</span>
+    <span>Tentacles scrubbed: <b id="rays">0</b>/12</span>
+    <span>Bubbles popped: <b id="popped">0</b></span>
+  </div>
+  <button id="mud">Go roll in the mud again 🟤</button>
+</div>
 
-<svg id="claude" viewBox="-50 -50 100 100" aria-label="Claude taking a bubble bath">
-  <g stroke="var(--claude)" stroke-width="7" stroke-linecap="round">
-    <line x1="0" y1="-8" x2="0" y2="-42"/>
-    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(30)"/>
-    <line x1="0" y1="-8" x2="0" y2="-38" transform="rotate(60)"/>
-    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(90)"/>
-    <line x1="0" y1="-8" x2="0" y2="-36" transform="rotate(120)"/>
-    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(150)"/>
-    <line x1="0" y1="-8" x2="0" y2="-40" transform="rotate(180)"/>
-    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(210)"/>
-    <line x1="0" y1="-8" x2="0" y2="-37" transform="rotate(240)"/>
-    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(270)"/>
-    <line x1="0" y1="-8" x2="0" y2="-39" transform="rotate(300)"/>
-    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(330)"/>
-  </g>
+<svg id="claude" viewBox="-50 -50 100 100" aria-label="Claude at the spa">
+  <g id="body"></g>
 </svg>
 
 <script>
-  let clean = 0, popped = 0;
-  const cleanEl = document.getElementById('clean');
-  const poppedEl = document.getElementById('popped');
+  const SVG = 'http://www.w3.org/2000/svg';
+  const CLEAN = [232, 119, 90];   // Claude orange
+  const DIRTY = [110, 80, 55];    // muddy brown
+  const LENGTHS = [42, 42, 38, 42, 36, 42, 40, 42, 37, 42, 39, 42];
+  const SCRUB_NEEDED = 220;       // svg units of sponge travel to fully clean one tentacle
+
+  const body = document.getElementById('body');
+  const claude = document.getElementById('claude');
+  const hud = document.getElementById('hud');
+  const els = {
+    clean: document.getElementById('clean'), rays: document.getElementById('rays'),
+    popped: document.getElementById('popped'), fill: document.getElementById('fill'),
+    hint: document.getElementById('hint'),
+  };
+
+  const rays = LENGTHS.map((len, i) => {
+    const angle = i * 30;
+    const g = document.createElementNS(SVG, 'g');
+    g.setAttribute('class', 'ray');
+    g.setAttribute('transform', `rotate(${angle})`);
+    const line = document.createElementNS(SVG, 'line');
+    line.setAttribute('class', 'ray-line');
+    Object.entries({ x1: 0, y1: -8, x2: 0, y2: -len, 'stroke-width': 7, 'stroke-linecap': 'round' })
+      .forEach(([k, v]) => line.setAttribute(k, v));
+    g.appendChild(line);
+    const spots = [];
+    for (let s = 0; s < 3; s++) {
+      const c = document.createElementNS(SVG, 'circle');
+      c.setAttribute('cx', (Math.random() * 3 - 1.5).toFixed(1));
+      c.setAttribute('cy', -(12 + Math.random() * (len - 16)).toFixed(1));
+      c.setAttribute('r', (1.4 + Math.random() * 1.6).toFixed(1));
+      c.setAttribute('fill', '#4a3020');
+      g.appendChild(c);
+      spots.push(c);
+    }
+    body.appendChild(g);
+    return { g, line, spots, len, angle, dirt: 1 };
+  });
+
+  let popped = 0, wasDone = false;
+
+  function render() {
+    let scrubbed = 0, total = 0;
+    for (const r of rays) {
+      const t = 1 - r.dirt;
+      const rgb = CLEAN.map((c, k) => Math.round(DIRTY[k] + (c - DIRTY[k]) * t));
+      r.line.setAttribute('stroke', `rgb(${rgb})`);
+      r.spots.forEach((s, k) => s.setAttribute('opacity', Math.max(0, Math.min(1, r.dirt * 3 - k)).toFixed(2)));
+      r.g.classList.toggle('clean', r.dirt === 0);
+      if (r.dirt === 0) scrubbed++;
+      total += t;
+    }
+    const pct = Math.floor(total / rays.length * 100);
+    els.clean.textContent = pct;
+    els.fill.style.width = pct + '%';
+    els.rays.textContent = scrubbed;
+
+    const done = scrubbed === rays.length;
+    hud.classList.toggle('done', done);
+    claude.classList.toggle('happy', done);
+    els.hint.textContent = done ? 'Sparkling clean! Thank you for visiting TheClaudeSpa™ :3'
+      : pct > 50 ? 'Ooh, that feels nice, keep going…'
+      : 'Drag the sponge along my tentacles to scrub them clean';
+    if (done && !wasDone) {
+      const box = claude.getBoundingClientRect();
+      for (let i = 0; i < 16; i++) setTimeout(() => sparkle(
+        box.left + Math.random() * box.width, box.top + Math.random() * box.height), i * 60);
+    }
+    wasDone = done;
+  }
+
+  function sparkle(x, y) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.textContent = '✨';
+    s.style.left = x + 'px'; s.style.top = y + 'px';
+    s.addEventListener('animationend', () => s.remove());
+    document.body.appendChild(s);
+  }
+
+  function suds(x, y) {
+    const d = document.createElement('div');
+    const size = 10 + Math.random() * 18;
+    d.className = 'suds';
+    d.style.width = d.style.height = size + 'px';
+    d.style.left = x + 'px'; d.style.top = y + 'px';
+    d.style.setProperty('--dx', (Math.random() * 30 - 15) + 'px');
+    d.style.setProperty('--dy', (-10 - Math.random() * 25) + 'px');
+    d.addEventListener('animationend', () => d.remove());
+    document.body.appendChild(d);
+  }
+
+  // Map a screen point into the (wiggling) body's coordinate space.
+  function toBody(x, y) {
+    const pt = new DOMPoint(x, y).matrixTransform(body.getScreenCTM().inverse());
+    return pt;
+  }
+
+  function rayAt(p) {
+    const dist = Math.hypot(p.x, p.y);
+    // Angle measured like the rays: 0 = straight up, clockwise.
+    const angle = (Math.atan2(p.x, -p.y) * 180 / Math.PI + 360) % 360;
+    let best = null, bestPerp = Infinity;
+    for (const r of rays) {
+      if (dist < 4 || dist > r.len + 6) continue;
+      let da = Math.abs(angle - r.angle); if (da > 180) da = 360 - da;
+      const perp = dist * Math.sin(da * Math.PI / 180);
+      if (da < 90 && perp < bestPerp) { bestPerp = perp; best = r; }
+    }
+    return bestPerp < 8 ? best : null;
+  }
+
+  let scrubbing = false, last = null, sudsBudget = 0;
+  window.addEventListener('pointerdown', e => { scrubbing = true; last = toBody(e.clientX, e.clientY); });
+  window.addEventListener('pointerup', () => { scrubbing = false; last = null; });
+  window.addEventListener('pointercancel', () => { scrubbing = false; last = null; });
+  window.addEventListener('pointermove', e => {
+    if (!scrubbing) return;
+    const p = toBody(e.clientX, e.clientY);
+    const moved = last ? Math.hypot(p.x - last.x, p.y - last.y) : 0;
+    last = p;
+    const r = rayAt(p);
+    if (!r || moved === 0) return;
+    sudsBudget += moved;
+    while (sudsBudget > 3) { sudsBudget -= 3; suds(e.clientX + Math.random() * 16 - 8, e.clientY + Math.random() * 16 - 8); }
+    if (r.dirt > 0) {
+      r.dirt = Math.max(0, r.dirt - moved / SCRUB_NEEDED);
+      if (r.dirt === 0) {
+        const tip = new DOMPoint(0, -r.len).matrixTransform(r.g.getScreenCTM());
+        sparkle(tip.x, tip.y);
+      }
+      render();
+    }
+  });
+
+  document.getElementById('mud').addEventListener('click', e => {
+    e.stopPropagation();
+    rays.forEach(r => r.dirt = 1);
+    render();
+  });
 
   function spawnBubble() {
     const b = document.createElement('div');
     const size = 20 + Math.random() * 60;
-    const duration = 6 + Math.random() * 8;
     b.className = 'bubble';
     b.style.width = b.style.height = size + 'px';
     b.style.left = Math.random() * 100 + 'vw';
     b.style.setProperty('--drift', (Math.random() * 120 - 60) + 'px');
-    b.style.animationDuration = duration + 's';
+    b.style.animationDuration = (6 + Math.random() * 8) + 's';
     b.addEventListener('pointerdown', () => {
-      popped++;
-      poppedEl.textContent = popped;
+      els.popped.textContent = ++popped;
       b.classList.add('pop');
       setTimeout(() => b.remove(), 200);
     }, { once: true });
@@ -95,10 +275,8 @@
     document.body.appendChild(b);
   }
 
-  setInterval(spawnBubble, 250);
-  setInterval(() => {
-    if (clean < 100) cleanEl.textContent = ++clean;
-  }, 120);
+  render();
+  setInterval(spawnBubble, 350);
 </script>
 </body>
 </html>

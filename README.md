@@ -2,4 +2,4 @@
 ???? Go crazy
 
 ## 🫧 Bubbles
-Open `bubbles/index.html` to watch Claude take a bubble bath. Click bubbles to pop them.
+Welcome to **TheClaudeSpa™**. Open `bubbles/index.html` and drag the sponge along Claude's muddy tentacles to scrub them clean. Pop bubbles for fun, and roll back in the mud to start over.
