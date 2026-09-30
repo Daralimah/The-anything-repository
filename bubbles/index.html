@@ -94,10 +94,47 @@
   #fill { height: 100%; width: 0; background: var(--meter); transition: width .2s; }
   #stats { margin-top: 8px; font-size: .9rem; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
   #mud {
-    display: none; margin: 10px auto 0; padding: 6px 14px; border: 0; border-radius: 999px;
+    display: inline-block; margin: 10px auto 0; padding: 6px 14px; border: 0; border-radius: 999px;
     background: #8a5a3c; color: #fff; font: inherit; cursor: pointer;
   }
-  #hud.done #mud { display: inline-block; }
+  #hud.done #mud { animation: nudge 1.2s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: scale(1.07); } }
+
+  /* Mud Run minigame */
+  #mudrun { position: fixed; inset: 0; z-index: 20; touch-action: none; cursor: crosshair; }
+  #mudrun[hidden], .mud-card[hidden] { display: none; }
+  #mud-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #mud-hud {
+    position: absolute; top: 12px; left: 16px; right: 16px; max-width: 640px; margin: 0 auto;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 12px;
+    border-radius: 14px; background: rgba(60,38,22,.8); color: #fbe9d7; font-size: .95rem;
+  }
+  #mud-meter { flex: 1 1 100px; height: 12px; border-radius: 6px; background: rgba(255,255,255,.18); overflow: hidden; }
+  #mud-fill { height: 100%; width: 0; background: linear-gradient(90deg, #b08060, #6e4a2f); }
+  #mud-quit { border: 0; border-radius: 8px; padding: 2px 8px; font-size: 1.1rem; background: rgba(255,255,255,.18); cursor: pointer; }
+  #splat {
+    position: absolute; right: 20px; bottom: 20px; width: 88px; height: 88px; border-radius: 50%;
+    border: 3px solid #fbe9d7; color: #fff; font: 800 1rem system-ui, sans-serif; cursor: pointer;
+    background: conic-gradient(#8a5a3c calc(var(--ready, 1) * 360deg), rgba(60,38,22,.55) 0);
+    box-shadow: 0 4px 14px rgba(0,0,0,.3); opacity: .75;
+  }
+  #splat.ready { opacity: 1; }
+  .mud-card {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: min(420px, calc(100vw - 32px)); box-sizing: border-box; padding: 20px; border-radius: 18px;
+    background: rgba(255,248,240,.96); color: #3b2616; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,.35);
+  }
+  .mud-card h2 { margin: 0 0 8px; }
+  .mud-card p { margin: 8px 0; line-height: 1.4; }
+  .mud-card ul { margin: 8px 0 12px; padding-left: 20px; text-align: left; line-height: 1.5; }
+  .mud-card button {
+    margin: 6px 4px 0; padding: 8px 16px; border: 0; border-radius: 999px;
+    background: #8a5a3c; color: #fff; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  .mud-card button.alt { background: #6cc4f0; color: #0b2a40; }
+  @media (prefers-color-scheme: dark) {
+    .mud-card { background: rgba(40,28,20,.96); color: #fbe9d7; }
+  }
 </style>
 </head>
 <body>
@@ -121,6 +158,37 @@
   </g>
 </svg>
 
+<div id="mudrun" hidden>
+  <canvas id="mud-canvas"></canvas>
+  <div id="mud-hud">
+    <b>🟤 MUD RUN</b>
+    <div id="mud-meter"><div id="mud-fill"></div></div>
+    <span>Mud <b id="mud-pct">0</b>%</span>
+    <span>⏱ <b id="mud-time">0:00</b></span>
+    <span>Score <b id="mud-score">0</b></span>
+    <button id="mud-quit" title="Give up and go take a bath (Esc)">🛁</button>
+  </div>
+  <button id="splat">SPLAT!</button>
+  <div class="mud-card" id="mud-intro">
+    <h2>🟤 Mud Run</h2>
+    <p>Roll through puddles to get filthy. The spa staff want you back in the bath, and they are <i>not</i> subtle about it.</p>
+    <ul>
+      <li><b>Move:</b> arrow keys / WASD, or hold and drag</li>
+      <li><b>SPLAT!</b> (Space or the button): dash, and fling mud off your tentacles. Splatted hands run away.</li>
+      <li>Soap bars wash mud off. Hands drag you back to the bath. Watch out for the BIG SCRUB.</li>
+    </ul>
+    <button id="mud-go">Let's get dirty!</button>
+  </div>
+  <div class="mud-card" id="mud-over" hidden>
+    <h2>Nabbed! 🛁</h2>
+    <p>Back to the bath you go.</p>
+    <p id="mud-result"></p>
+    <button id="mud-again">Roll again</button>
+    <button id="mud-home" class="alt">Back to the spa</button>
+  </div>
+</div>
+
+<script src="mud.js"></script>
 <script>
   const SVG = 'http://www.w3.org/2000/svg';
   const CLEAN = [232, 119, 90];   // Claude orange
@@ -136,7 +204,7 @@
   const els = {
     clean: document.getElementById('clean'), rays: document.getElementById('rays'),
     popped: document.getElementById('popped'), fill: document.getElementById('fill'),
-    hint: document.getElementById('hint'),
+    hint: document.getElementById('hint'), mud: document.getElementById('mud'),
   };
 
   const rays = LENGTHS.map((len, i) => {
@@ -206,6 +274,7 @@
     const done = scrubbed === rays.length;
     hud.classList.toggle('done', done);
     claude.classList.toggle('happy', done);
+    els.mud.textContent = done ? 'Go roll in the mud again 🟤' : 'Sneak off to the mud 🟤';
     els.hint.textContent = done ? 'Sparkling clean! Thank you for visiting TheClaudeSpa™ :3'
       : pct > 50 ? 'Ooh, that feels nice, keep going…'
       : 'Drag the sponge along my tentacles to scrub them clean';
@@ -259,11 +328,14 @@
   }
 
   let scrubbing = false, last = null, sudsBudget = 0;
-  window.addEventListener('pointerdown', e => { scrubbing = true; last = toBody(e.clientX, e.clientY); });
+  window.addEventListener('pointerdown', e => {
+    if (MudRun.active) return;
+    scrubbing = true; last = toBody(e.clientX, e.clientY);
+  });
   window.addEventListener('pointerup', () => { scrubbing = false; last = null; });
   window.addEventListener('pointercancel', () => { scrubbing = false; last = null; });
   window.addEventListener('pointermove', e => {
-    if (!scrubbing) return;
+    if (!scrubbing || MudRun.active) return;
     const p = toBody(e.clientX, e.clientY);
     const moved = last ? Math.hypot(p.x - last.x, p.y - last.y) : 0;
     last = p;
@@ -281,13 +353,17 @@
     }
   });
 
-  document.getElementById('mud').addEventListener('click', e => {
+  els.mud.addEventListener('click', e => {
     e.stopPropagation();
-    rays.forEach(r => r.dirt = 1);
-    render();
+    scrubbing = false;
+    MudRun.start({
+      dirt: rays.map(r => r.dirt), lengths: LENGTHS, clean: CLEAN, dirty: DIRTY,
+      onExit: dirt => { dirt.forEach((d, i) => { rays[i].dirt = d; }); render(); },
+    });
   });
 
   function spawnBubble() {
+    if (MudRun.active) return;
     const b = document.createElement('div');
     const size = 20 + Math.random() * 60;
     b.className = 'bubble';
