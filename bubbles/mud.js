@@ -21,6 +21,8 @@ window.MudRun = (() => {
   const EW_LINES = ['EW!', 'GROSS!', 'YUCK!', 'BLEH!'];
   const MILESTONES = [[0.25, 'Grubby!'], [0.5, 'FILTHY!'], [0.75, 'DISGUSTING!'], [0.999, 'MAXIMUM MUD!!']];
   const SPLAT_CD = 2.5;        // seconds between SPLATs
+  const SOAP_AIM = 0.55;       // seconds a soaper shows its aim line before throwing
+  const SOAP_GAP = 0.7;        // minimum seconds between any two soap throws
   const BEST_KEY = 'claudespa-mudrun-best';
 
   // Fixed mud-spot layout per tentacle: position along it, sideways nudge, size.
@@ -91,7 +93,7 @@ window.MudRun = (() => {
       claude: { x: W / 2, y: (top + H) / 2, vx: 0, vy: 0, rot: 0, spin: 0, dash: 0, iframes: 0 },
       dirt: dirt.slice(), gained: 0, splatted: 0,
       milestone: 0, puddles: [], hands: [], soaps: [], blobs: [], decals: [], parts: [], texts: [],
-      ducks: [], sweeps: [], nextHand: 2, nextSweep: 35, nextDuck: 15, splatCd: 0, shake: 0, trailT: 0,
+      ducks: [], sweeps: [], nextHand: 2, nextSweep: 35, nextDuck: 15, splatCd: 0, soapCd: 0, shake: 0, trailT: 0,
     };
     while (g.milestone < MILESTONES.length && avg(dirt) >= MILESTONES[g.milestone][0]) g.milestone++;
     for (let i = 0; i < 5; i++) g.puddles.push(makePuddle());
@@ -153,7 +155,9 @@ window.MudRun = (() => {
     const active = g.hands.filter(h => h.state !== 'retract' && h.state !== 'ew').length;
     if (g.nextHand <= 0 && active < Math.min(9, 2 + Math.floor(t / 12))) {
       const types = ['grabby', 'grabby'];
-      if (t > 10) types.push('soaper');
+      // Soapers are capped so their throws stay dodgeable: one at a time, two after 45s.
+      const soapers = g.hands.filter(h => h.type === 'soaper' && h.state !== 'retract' && h.state !== 'ew').length;
+      if (t > 10 && soapers < (t > 45 ? 2 : 1)) types.push('soaper');
       if (t > 20) types.push('lunger', 'lunger');
       spawnHand(pick(types));
       g.nextHand = Math.max(0.7, 3 - t * 0.035) * rand(0.7, 1.3);
@@ -282,8 +286,7 @@ window.MudRun = (() => {
   function move(h, sp, dt) { h.x += Math.cos(h.dir) * sp * dt; h.y += Math.sin(h.dir) * sp * dt; }
 
   function throwSoap(h) {
-    const c = g.claude, diff = 1 + g.t / 80;
-    const a = Math.atan2(c.y + c.vy * 0.4 - h.y, c.x + c.vx * 0.4 - h.x), v = 380 * S * Math.min(1.6, diff);
+    const a = h.aim, v = 330 * S * Math.min(1.3, 1 + g.t / 80);
     g.soaps.push({ x: h.x + Math.cos(a) * 20 * S, y: h.y + Math.sin(a) * 20 * S, vx: Math.cos(a) * v, vy: Math.sin(a) * v, rot: rand(0, TAU), spin: rand(-8, 8) });
   }
 
@@ -320,14 +323,26 @@ window.MudRun = (() => {
           if (h.st > 0.4) h.state = 'retract';
         }
       } else if (h.type === 'soaper') {
-        // Peeks in from the edge and lobs soap bars.
-        h.dir = toC;
+        // Peeks in from the edge and lobs soap bars. Before each throw it locks its aim
+        // on where Claude is and shows an aim line, so a sidestep dodges the bar.
         if (h.state === 'reach') {
+          h.dir = toC;
           move(h, 160 * S, dt);
-          if (Math.hypot(h.x - h.ax, h.y - h.ay) > 110 * S) { h.state = 'throw'; h.st = 0.4; }
-        } else if ((h.st -= dt) <= 0) {
-          throwSoap(h);
-          h.st = Math.max(0.7, 1.6 / diff);
+          if (Math.hypot(h.x - h.ax, h.y - h.ay) > 110 * S) { h.state = 'throw'; h.st = 1; h.aim = null; }
+        } else {
+          h.st -= dt;
+          if (h.aim === null) {
+            h.dir = toC;
+            if (h.st <= SOAP_AIM) h.aim = toC;
+          } else {
+            h.dir = h.aim;
+            if (h.st <= 0 && g.soapCd <= 0) {
+              throwSoap(h);
+              g.soapCd = SOAP_GAP;
+              h.aim = null;
+              h.st = Math.max(1.5, 2.4 / diff);
+            }
+          }
         }
       }
       if (playing && c.iframes <= 0 && d < claudeR() * 0.7 + 15 * S) nab({ hand: h });
@@ -465,6 +480,7 @@ window.MudRun = (() => {
     if (g.state === 'play') {
       g.t += dt;
       g.splatCd = Math.max(0, g.splatCd - dt);
+      g.soapCd -= dt;
       spawnStuff(dt);
       updateClaude(dt);
     } else if (g.state === 'caught') {
@@ -605,6 +621,19 @@ window.MudRun = (() => {
     let x = h.x, y = h.y;
     if (h.state === 'windup' || h.state === 'ew') { x += rand(-2, 2) * S; y += rand(-2, 2) * S; }
     const wiggle = g.clock * (h.state === 'windup' ? 28 : 7) + h.wob;
+    if (h.state === 'throw' && h.aim !== null) {
+      // Aim line, fading in over the wind-up, and the hand drawn back ready to throw.
+      const k = clamp(1 - h.st / SOAP_AIM, 0, 1);
+      ctx.save();
+      ctx.setLineDash([8 * S, 8 * S]); ctx.lineDashOffset = -g.clock * 80;
+      ctx.strokeStyle = `rgba(143,212,255,${0.35 + 0.5 * k})`; ctx.lineWidth = 3 * S; ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(h.x + Math.cos(h.aim) * 28 * S, h.y + Math.sin(h.aim) * 28 * S);
+      ctx.lineTo(h.x + Math.cos(h.aim) * 280 * S, h.y + Math.sin(h.aim) * 280 * S);
+      ctx.stroke();
+      ctx.restore();
+      x -= Math.cos(h.aim) * 8 * S * k; y -= Math.sin(h.aim) * 8 * S * k;
+    }
     drawHand(x, y, h.dir, 1.15 * S, GLOVES[h.type], h.grip, wiggle, h.muddy);
     if (h.state === 'windup') {
       ctx.font = `900 ${30 * S}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
