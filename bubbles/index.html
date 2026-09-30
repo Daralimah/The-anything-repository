@@ -49,7 +49,8 @@
     50%     { transform: rotate(10deg) scale(1.08); }
   }
   .ray-line { transition: stroke .15s; }
-  .ray.clean .ray-line { filter: drop-shadow(0 0 2px #fff); }
+  .hub-slice { transition: fill .15s; }
+  .glow-line { transition: opacity .3s; }
 
   .bubble {
     position: fixed; bottom: -80px; border-radius: 50%; cursor: inherit; z-index: 1;
@@ -113,7 +114,11 @@
 </div>
 
 <svg id="claude" viewBox="-50 -50 100 100" aria-label="Claude at the spa">
-  <g id="body"></g>
+  <defs><filter id="soft"><feGaussianBlur stdDeviation="1.4"/></filter></defs>
+  <g id="body">
+    <g id="glow" filter="url(#soft)"></g>
+    <g id="hub"></g>
+  </g>
 </svg>
 
 <script>
@@ -124,6 +129,8 @@
   const SCRUB_NEEDED = 220;       // svg units of sponge travel to fully clean one tentacle
 
   const body = document.getElementById('body');
+  const glowLayer = document.getElementById('glow');
+  const hub = document.getElementById('hub');
   const claude = document.getElementById('claude');
   const hud = document.getElementById('hud');
   const els = {
@@ -153,13 +160,29 @@
       spots.push(c);
     }
     body.appendChild(g);
-    return { g, line, spots, len, angle, dirt: 1 };
-  });
 
-  // Solid middle, so there's no hole where the tentacles meet.
-  const core = document.createElementNS(SVG, 'circle');
-  core.setAttribute('r', 11);
-  body.appendChild(core);
+    // One slice of the solid middle per tentacle, in that tentacle's colour, sitting
+    // underneath the tentacles. Slices overlap their neighbours slightly so there are
+    // no anti-aliasing hairlines between them, and start just past the centre so the
+    // middle point is covered too.
+    const R = 9, half = 17 * Math.PI / 180;
+    const wedge = document.createElementNS(SVG, 'path');
+    wedge.setAttribute('class', 'hub-slice');
+    wedge.setAttribute('transform', `rotate(${angle})`);
+    wedge.setAttribute('d', `M0 1.5L${(-R * Math.sin(half)).toFixed(2)} ${(-R * Math.cos(half)).toFixed(2)}` +
+      `A${R} ${R} 0 0 1 ${(R * Math.sin(half)).toFixed(2)} ${(-R * Math.cos(half)).toFixed(2)}Z`);
+    hub.appendChild(wedge);
+
+    // Glow behind the whole body, so it only peeks out around the outside edge.
+    const glow = document.createElementNS(SVG, 'line');
+    glow.setAttribute('class', 'glow-line');
+    glow.setAttribute('transform', `rotate(${angle})`);
+    Object.entries({ x1: 0, y1: -4, x2: 0, y2: -len, stroke: '#fff', 'stroke-width': 11, 'stroke-linecap': 'round', opacity: 0 })
+      .forEach(([k, v]) => glow.setAttribute(k, v));
+    glowLayer.appendChild(glow);
+
+    return { g, line, wedge, glow, spots, len, angle, dirt: 1 };
+  });
 
   let popped = 0, wasDone = false;
 
@@ -169,14 +192,13 @@
       const t = 1 - r.dirt;
       const rgb = CLEAN.map((c, k) => Math.round(DIRTY[k] + (c - DIRTY[k]) * t));
       r.line.setAttribute('stroke', `rgb(${rgb})`);
+      r.wedge.setAttribute('fill', `rgb(${rgb})`);
+      r.glow.setAttribute('opacity', r.dirt === 0 ? .85 : 0);
       r.spots.forEach((s, k) => s.setAttribute('opacity', Math.max(0, Math.min(1, r.dirt * 3 - k)).toFixed(2)));
-      r.g.classList.toggle('clean', r.dirt === 0);
       if (r.dirt === 0) scrubbed++;
       total += t;
     }
-    const avg = total / rays.length;
-    core.setAttribute('fill', `rgb(${CLEAN.map((c, k) => Math.round(DIRTY[k] + (c - DIRTY[k]) * avg))})`);
-    const pct = Math.floor(avg * 100);
+    const pct = Math.floor(total / rays.length * 100);
     els.clean.textContent = pct;
     els.fill.style.width = pct + '%';
     els.rays.textContent = scrubbed;
