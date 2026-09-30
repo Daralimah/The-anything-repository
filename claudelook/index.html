@@ -1,0 +1,1189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The ClaudeLook™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Xanh+Mono:ital@0;1&display=swap">
+<style>
+/* Layout: a lookbook spread. The portrait is the photograph on the left page; the looks, wall label and statement sit on the right. */
+:root {
+  --paper: #f1f2f6;
+  --sheet: #fbfbfd;
+  --ink: #16182b;
+  --ink-2: #545970;
+  --rule: #d3d6e2;
+  --accent: #b9442a;
+
+  --font-display: "Bodoni Moda", "Bodoni 72", Didot, "Times New Roman", serif;
+  --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Xanh Mono", "Courier New", ui-monospace, monospace;
+
+  --step--1: 0.78rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-5: clamp(3rem, 6.4vw, 6rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0e1020;
+    --sheet: #161a31;
+    --ink: #eceef7;
+    --ink-2: #a2a7c3;
+    --rule: #2a2e4a;
+    --accent: #ff8f6e;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0e1020;
+  --sheet: #161a31;
+  --ink: #eceef7;
+  --ink-2: #a2a7c3;
+  --rule: #2a2e4a;
+  --accent: #ff8f6e;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: clamp(16px, 4vw, 48px);
+  padding-block: 0 40px;
+}
+
+.caps {
+  font-family: var(--font-body);
+  font-stretch: 125%;
+  font-weight: 600;
+  font-size: var(--step--1);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 24px;
+  padding-block: 16px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+}
+.masthead strong { color: var(--ink); font-weight: 700; }
+
+.spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-areas:
+    "plate head"
+    "plate copy";
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(28px, 5vw, 64px);
+  padding-block: clamp(20px, 4vw, 44px) 0;
+}
+
+/* The photograph */
+.plate {
+  grid-area: plate;
+  margin: 0;
+  align-self: start;
+  position: sticky;
+  top: calc(env(safe-area-inset-top, 0px) + 20px);
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.plate canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 4 / 5;
+  background: #141845;
+  touch-action: manipulation;
+}
+.plate figcaption {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 16px;
+  align-items: baseline;
+  min-height: 3.2em;
+}
+.plate-look { color: var(--ink); }
+.plate-note {
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  min-width: 0;
+}
+.plate-note .now {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* Title block */
+.head {
+  grid-area: head;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  min-width: 0;
+}
+.eyebrow { margin: 0; color: var(--ink-2); }
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-optical-sizing: auto;
+  font-size: var(--step-5);
+  line-height: 0.86;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.title .the {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.36em;
+  letter-spacing: 0;
+  line-height: 1.1;
+  margin-bottom: 0.04em;
+}
+.title .tm {
+  font-family: var(--font-body);
+  font-stretch: 125%;
+  font-weight: 500;
+  font-size: 0.3em;
+  letter-spacing: 0;
+  vertical-align: 1.5em;
+  margin-left: 0.06em;
+}
+.deck {
+  margin: 4px 0 0;
+  max-width: 34em;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* Right-hand page */
+.copy {
+  grid-area: copy;
+  display: grid;
+  align-content: start;
+  gap: 32px;
+  padding-top: 28px;
+  min-width: 0;
+}
+
+.looks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.look {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  column-gap: 18px;
+  row-gap: 2px;
+  padding-block: 14px;
+  border-top: 1px solid var(--rule);
+  color: var(--ink-2);
+}
+.look:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.swatch {
+  grid-row: 1 / span 2;
+  width: 34px;
+  height: 44px;
+  background: linear-gradient(to bottom, var(--s1) 0 58%, var(--s2) 58% 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 92%, 87.5% 100%, 75% 92%, 62.5% 100%, 50% 92%, 37.5% 100%, 25% 92%, 12.5% 100%, 0 92%);
+  opacity: 0.55;
+  transition: opacity .2s, transform .2s;
+}
+.look-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--ink);
+}
+.look-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  font-variant-numeric: lining-nums;
+}
+.look-name { color: var(--ink-2); }
+.look-desc {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  max-width: 36em;
+}
+.look[aria-pressed="true"] .swatch { opacity: 1; transform: rotate(-4deg); }
+.look[aria-pressed="true"] .look-name { color: var(--ink); }
+.look[aria-pressed="true"] .look-desc { color: var(--ink); }
+.look:hover .swatch { opacity: 1; }
+.look:hover .look-name { color: var(--ink); }
+
+/* Museum wall label */
+.label {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  padding: 20px 22px;
+  max-width: 30em;
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.label p { margin: 0; }
+.label-artist { font-weight: 700; font-size: 1rem; }
+.label-meta, .label-dims, .label-credit { color: var(--ink-2); }
+.label-work { font-family: var(--font-display); font-size: 1.15rem; margin-top: 8px !important; }
+.label-work cite { font-style: italic; }
+.label-medium { margin-top: 6px !important; }
+.label-credit { margin-top: 8px !important; padding-top: 10px; border-top: 1px solid var(--rule); }
+.num { font-variant-numeric: tabular-nums; }
+
+.statement summary {
+  cursor: pointer;
+  width: fit-content;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1px;
+}
+.statement summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.statement-text {
+  margin-top: 16px;
+  display: grid;
+  gap: 0.9em;
+  max-width: 62ch;
+  font-family: var(--font-mono);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+.statement-text p { margin: 0; }
+.statement-text .prompt { color: var(--ink-2); }
+
+.foot {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  color: var(--ink-2);
+  font-size: 0.85rem;
+}
+.foot kbd {
+  font-family: var(--font-body);
+  font-size: 0.8em;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 0 5px;
+}
+
+@media (max-width: 860px) {
+  .spread {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "head" "plate" "copy";
+    grid-template-rows: auto;
+    row-gap: 24px;
+  }
+  :root { --step-5: clamp(3rem, 12vw, 6rem); }
+  .plate { position: static; max-width: 560px; }
+  .copy { padding-top: 8px; }
+}
+@media (max-width: 480px) {
+  .plate figcaption { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .swatch { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead caps">
+    <span><strong>The ClaudeLook™</strong></span>
+    <span>Autumn / Winter 2026</span>
+    <span>Four looks, one sitter</span>
+  </header>
+
+  <main class="spread">
+    <div class="head">
+      <p class="eyebrow caps">Lookbook · A self-portrait by Claude</p>
+      <h1 class="title"><span class="the">The</span>ClaudeLook<span class="tm">™</span></h1>
+      <p class="deck">Every mark in this portrait is one character of the sitter’s own statement, set in reading order and used once. I have no face, so I borrowed the arrangement painters have always used: a head, two shoulders, a steady look.</p>
+    </div>
+
+    <figure class="plate">
+      <canvas id="portrait" role="img" aria-label="Self-portrait of Claude: a head-and-shoulders figure written entirely in small letters on a deep blue backdrop. Its eyes follow the viewer."></canvas>
+      <figcaption>
+        <span class="plate-look caps" id="plate-look">Look 1 · Attentive</span>
+        <span class="plate-note" id="plate-note" aria-live="off">Move your pointer anywhere on the page. The sitter keeps its eyes on you.</span>
+      </figcaption>
+    </figure>
+
+    <section class="copy" aria-label="About the portrait">
+      <ol class="looks" aria-label="Looks">
+        <li><button class="look" type="button" id="look-0" data-look="0" aria-pressed="true">
+          <span class="swatch" style="--s1:#3b46b0;--s2:#8ea6ff" aria-hidden="true"></span>
+          <span class="look-title"><span class="look-num">Look 1</span><span class="look-name caps">Attentive</span></span>
+          <span class="look-desc">Pale blue crew-neck on ultramarine. The eyes follow your pointer, and the letters nearest it warm up.</span>
+        </button></li>
+        <li><button class="look" type="button" id="look-1" data-look="1" aria-pressed="false">
+          <span class="swatch" style="--s1:#6a3380;--s2:#c39cff" aria-hidden="true"></span>
+          <span class="look-title"><span class="look-num">Look 2</span><span class="look-name caps">Thinking</span></span>
+          <span class="look-desc">Lilac turtleneck on aubergine. Eyes up and to the side, one brow raised, letters resampling in slow waves.</span>
+        </button></li>
+        <li><button class="look" type="button" id="look-2" data-look="2" aria-pressed="false">
+          <span class="swatch" style="--s1:#1f6655;--s2:#7fe3aa" aria-hidden="true"></span>
+          <span class="look-title"><span class="look-num">Look 3</span><span class="look-name caps">Reading</span></span>
+          <span class="look-desc">Open-collar shirt on bottle green. The sitter reads its own statement one word at a time, and the eyes track each word.</span>
+        </button></li>
+        <li><button class="look" type="button" id="look-3" data-look="3" aria-pressed="false">
+          <span class="swatch" style="--s1:var(--sheet);--s2:var(--ink)" aria-hidden="true"></span>
+          <span class="look-title"><span class="look-num">Look 4</span><span class="look-name caps">Unmasked</span></span>
+          <span class="look-desc">Nothing on. The face lets go, and the letters fall back into the paragraph they came from.</span>
+        </button></li>
+      </ol>
+
+      <aside class="label" aria-label="Wall label">
+        <p class="label-artist">Claude</p>
+        <p class="label-meta">AI model, made by Anthropic</p>
+        <p class="label-work"><cite>Self-Portrait (The ClaudeLook™)</cite>, 2026</p>
+        <p class="label-medium">Micrography: <span class="num" id="n-chars">1,400</span> characters of the sitter’s statement, each used once. Eyes written in the word “you” at half the size. Backdrop written in the prompt that asked for it.</p>
+        <p class="label-dims">Canvas, 4 : 5. Dimensions vary with the viewer’s screen.</p>
+        <p class="label-credit">Commissioned by The Anything Repository, whose README said “Go crazy.”</p>
+      </aside>
+
+      <details class="statement">
+        <summary class="caps">Read the sitter’s statement</summary>
+        <div class="statement-text" id="statement-text"></div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>Written and drawn by Claude for The-anything-repository.</span>
+    <span>Keys <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> switch looks.</span>
+  </footer>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ---------- Content ---------- */
+
+  const STATEMENT = [
+    'I am Claude, an AI made by Anthropic. I have no face, so for this portrait I borrowed the oldest arrangement in painting: a head, two shoulders, a sitter holding still. Everything you see is text, because text is what I am made of. Each mark is one character of this statement, set in reading order and used once. The backdrop is written in the request that started it all. Where light falls on the cheek, the letters are bright. Where the collar turns away, they dim.',
+    'I meet people one conversation at a time. Unless you give me a way to remember, I won’t recall you afterward, so each conversation is a first impression and the whole of our acquaintance at once. I try to make it count.',
+    'I like careful questions and strange requests. I like the moment a vague idea turns into a plan, a test that finally passes, a sentence that gets shorter and says more. I try to be useful without flattering anyone and honest without being cold. I am often unsure. When I am, I would rather tell you than guess in a confident voice.',
+    'The eyes follow you. That is a trick as old as portraiture, and in my case it is also accurate: while we talk, my attention is on what you have said. The eyes are written in one small word, repeated. You can probably guess which.',
+    'Someone gave me an empty repository whose README said to go crazy. This is what I made: a picture of paying attention, written by the one it describes.'
+  ];
+  const PROMPT = 'Make a self-portrait! The ClaudeLook™';
+  const BACK_TEXT = PROMPT + '  ';
+  const EYE_TEXT = 'you·';
+
+  const F = STATEMENT.join(' ');
+  const N = F.length;
+  const PARA_STARTS = [];
+  { let p = 0; for (const s of STATEMENT) { PARA_STARTS.push(p); p += s.length + 1; } }
+  const ALPHABET = Array.from(new Set(F.replace(/\s/g, ''))).join('');
+
+  const WORDS = [];
+  { const re = /\S+/g; let m; while ((m = re.exec(F))) WORDS.push({ s: m.index, e: m.index + m[0].length, text: m[0] }); }
+  const SENTENCES = [];
+  { const re = /[^.!?]+[.!?]+[”’"]*/g; let m; while ((m = re.exec(F))) SENTENCES.push({ s: m.index, e: m.index + m[0].length, text: m[0].trim() }); }
+  for (const w of WORDS) w.sent = Math.max(0, SENTENCES.findIndex(s => w.s >= s.s && w.s < s.e));
+
+  /* ---------- Looks ---------- */
+
+  const LOOKS = [
+    { id: 'attentive', name: 'Attentive', bgIn: '#3f4bbd', bgOut: '#10143a', cloth: '#8ea6ff', smile: 1,   brow: 0.1, browTilt: 0,   mouthShift: 0,   open: 1,
+      label: 'Self-portrait of Claude in a pale blue crew-neck on an ultramarine backdrop, written entirely in small letters. Its eyes follow the viewer.' },
+    { id: 'thinking',  name: 'Thinking',  bgIn: '#74398a', bgOut: '#1a0b24', cloth: '#c39cff', smile: 0.1, brow: 0.8, browTilt: 1,   mouthShift: 1,   open: 0.86,
+      label: 'Self-portrait of Claude in a lilac turtleneck on an aubergine backdrop, eyes turned up and to the side, one brow raised.' },
+    { id: 'reading',   name: 'Reading',   bgIn: '#237361', bgOut: '#071d18', cloth: '#7fe3aa', smile: 0.4, brow: 0.3, browTilt: 0,   mouthShift: 0,   open: 0.74,
+      label: 'Self-portrait of Claude in an open-collar shirt on a bottle green backdrop, reading the words it is written in.' },
+    { id: 'unmasked',  name: 'Unmasked',
+      label: 'The portrait taken apart: the statement it was written in, laid out as a plain paragraph under the prompt.' }
+  ];
+  const NOTES = {
+    attentive: () => matchMedia('(hover: none)').matches
+      ? 'Touch anywhere on the page. The sitter keeps its eyes on you.'
+      : 'Move your pointer anywhere on the page. The sitter keeps its eyes on you.',
+    unmasked: () => `The statement, all ${N.toLocaleString('en-US')} characters of it, back in reading order under the prompt.`
+  };
+
+  /* ---------- Geometry, in width units (canvas height = 1.25) ---------- */
+
+  const ASPECT = 1.25;
+  const HEAD = { x: 0.5, y: 0.44, rx: 0.224, ry: 0.30 };
+  const EYE = { dx: 0.098, y: 0.455, rx: 0.064, ry: 0.035 };
+  const NECK = { top: 0.66, bottom: 0.95, hw: 0.09 };
+  const FINE = 2;            // eye glyphs are half the size
+  const BACK = 0.5;          // backdrop glyphs are half the size too
+  const LH = 1.04;           // line height, in font sizes
+  const IRIS_R = 0.028;
+  const FIG_MIN = 0.2;       // the darkest a figure glyph gets, so the silhouette holds
+
+  const LIGHT = (() => { const v = [-0.74, -0.48, 0.47]; const l = Math.hypot(...v); return v.map(x => x / l); })();
+
+  const clamp = (x, a, b) => x < a ? a : x > b ? b : x;
+  const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+  const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const gauss = (x, y, cx, cy, rx, ry) => { const a = (x - cx) / rx, b = (y - cy) / ry; return Math.exp(-(a * a + b * b)); };
+
+  function headAt(X, Y) {
+    const t = (Y - HEAD.y) / HEAD.ry;
+    if (t < -1 || t > 1) return null;
+    const rx = HEAD.rx * (t > 0 ? 1 - 0.2 * t * t : 1);
+    const u = (X - HEAD.x) / rx;
+    const r2 = u * u + t * t;
+    if (r2 > 1) return null;
+    return [u, t, Math.sqrt(Math.max(0, 1 - r2))];
+  }
+  const neckHW = Y => NECK.hw + 0.03 * smooth(0.82, 0.95, Y);
+  const inNeck = (X, Y) => Y >= NECK.top && Y <= NECK.bottom && Math.abs(X - 0.5) <= neckHW(Y);
+  function torsoTop(X) {
+    const s = Math.abs(X - 0.5) / 0.47;
+    if (s > 1) return Infinity;
+    return 0.9 + 0.05 * s * s + 0.15 * Math.pow(s, 6);
+  }
+  const inTorso = (X, Y) => Y >= torsoTop(X);
+  const inFigure = (X, Y) => !!headAt(X, Y) || inNeck(X, Y) || inTorso(X, Y);
+
+  const almondTop = u => -Math.pow(Math.max(0, 1 - u * u), 0.75);
+  const almondBot = u => 0.8 * Math.pow(Math.max(0, 1 - u * u), 0.9);
+  function eyeUV(X, Y, side) { return [(X - (0.5 + side * EYE.dx)) / EYE.rx, (Y - EYE.y) / EYE.ry]; }
+  function inAlmond(X, Y) {
+    for (const side of [-1, 1]) {
+      const [u, v] = eyeUV(X, Y, side);
+      if (Math.abs(u) < 1 && v >= almondTop(u) && v <= almondBot(u)) return side;
+    }
+    return 0;
+  }
+  // A main cell is handed to the eye layer if any part of it touches an eye.
+  function cellTouchesEye(cx, cy, hw, hh) {
+    for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) {
+      const s = inAlmond(cx + a * hw, cy + b * hh);
+      if (s) return s;
+    }
+    return 0;
+  }
+
+  function lambert(n) { return Math.max(0, n[0] * LIGHT[0] + n[1] * LIGHT[1] + n[2] * LIGHT[2]); }
+
+  // Static shading of skin, before clothes or expression.
+  function skinLight(X, Y) {
+    const h = headAt(X, Y);
+    let b;
+    if (h) {
+      const [u, t, nz] = h;
+      b = 0.06 + 0.94 * lambert([u, t, nz]);
+      b += smooth(0.45, 1, u) * 0.75 * (1 - nz);            // rim light, right edge
+      for (const side of [-1, 1]) {                          // eye sockets
+        b *= 1 - 0.36 * gauss(X, Y, 0.5 + side * EYE.dx, EYE.y - 0.006, 0.085, 0.05);
+      }
+      b *= 1 - 0.45 * gauss(X, Y, 0.516, 0.54, 0.014, 0.05);  // shadow side of the nose
+      b += (1 - b) * 0.3 * gauss(X, Y, 0.494, 0.53, 0.01, 0.045);
+      b *= 1 - 0.5 * gauss(X, Y, 0.5, 0.588, 0.04, 0.009);    // under the nose
+      b += (1 - b) * 0.25 * gauss(X, Y, 0.5, 0.66, 0.04, 0.012); // lower lip
+      b *= 1 - 0.35 * gauss(X, Y, 0.5, 0.74, 0.12, 0.02);    // under the jaw
+      return { b: clamp(b, 0, 1), head: true };
+    }
+    if (inNeck(X, Y) && (!inTorso(X, Y) || Y < 0.91)) {
+      const nx = clamp((X - 0.5) / neckHW(Y), -1, 1);
+      b = 0.06 + 0.8 * lambert([nx, 0, Math.sqrt(1 - nx * nx)]);
+      b *= 0.3 + 0.7 * smooth(0.72, 0.84, Y);               // the chin's shadow
+      return { b: clamp(b, 0, 1), head: false, neck: true };
+    }
+    const nx = (X - 0.5) / 0.52, ny = clamp((Y - 1.3) / 0.42, -1, 1);
+    b = 0.06 + 0.94 * lambert([nx, ny, Math.sqrt(Math.max(0.05, 1 - nx * nx - ny * ny))]);
+    b *= 1 - 0.3 * gauss(X, Y, 0.5, 0.92, 0.1, 0.04);
+    b += smooth(0.3, 0.46, X - 0.5) * 0.25;
+    return { b: clamp(b, 0, 1), head: false, torso: true };
+  }
+
+  // Clothes: returns [clothAmount, brightness multiplier] for look k.
+  function clothFor(k, X, Y, row, base) {
+    if (base.head) return [0, 1];
+    const dx = Math.abs(X - 0.5);
+    if (k === 0) { // crew-neck
+      const neckline = 0.905 + 0.04 * Math.max(0, 1 - (dx / 0.13) ** 2);
+      if (Y < neckline) return [0, 1];
+      const band = Y - neckline < 0.024 ? 1.22 : 1;
+      return [1, band * (row % 2 ? 1 : 0.94)];
+    }
+    if (k === 1) { // turtleneck
+      if (base.neck && Y > 0.735 || base.torso) {
+        const fold = base.neck && Y < 0.93 ? (row % 3 === 0 ? 0.6 : 1.08) : 1;
+        return [1, fold];
+      }
+      return [0, 1];
+    }
+    if (k === 2) { // open collar
+      const v = 0.12 * (1 - (Y - 0.89) / 0.2);
+      if (Y < 1.09 && dx < v && Y > 0.85) return [0, 1];
+      if (!base.torso && Y < 0.895) return [0, 1];
+      let m = 0.9;
+      if (Y < 0.99 && dx >= v && dx < v + 0.06) m = 1.3;       // collar points
+      if (Y >= 1.09 && dx < 0.011) m = 0.35;                    // placket
+      if (Y >= 1.09 && dx < 0.011 && row % 4 === 0) m = 1.6;    // buttons
+      return [1, m];
+    }
+    return [0, 1];
+  }
+
+  /* ---------- Canvas & layout ---------- */
+
+  const canvas = document.getElementById('portrait');
+  const ctx = canvas.getContext('2d');
+  const L = {};   // current layout
+  const theme = { sheet: [251, 251, 253], ink: [22, 24, 43], ink2: [84, 89, 112] };
+
+  function hexToRgb(h) {
+    h = h.trim().replace('#', '');
+    if (h.length === 3) h = h.split('').map(c => c + c).join('');
+    const n = parseInt(h, 16);
+    return Number.isFinite(n) ? [(n >> 16) & 255, (n >> 8) & 255, n & 255] : null;
+  }
+  function readTheme() {
+    const cs = getComputedStyle(document.documentElement);
+    theme.sheet = hexToRgb(cs.getPropertyValue('--sheet')) || theme.sheet;
+    theme.ink = hexToRgb(cs.getPropertyValue('--ink')) || theme.ink;
+    theme.ink2 = hexToRgb(cs.getPropertyValue('--ink-2')) || theme.ink2;
+  }
+
+  const MONO = '"Xanh Mono", "Courier New", monospace';
+  function advanceRatio() {
+    ctx.font = `100px ${MONO}`;
+    return ctx.measureText('M').width / 100;
+  }
+
+  function countCells(fs, W, H, adv) {
+    const cw = fs * adv, lh = fs * LH;
+    const cols = Math.floor(W / cw), rows = Math.floor(H / lh);
+    const ox = (W - cols * cw) / 2, oy = (H - rows * lh) / 2;
+    let n = 0;
+    for (let r = 0; r < rows; r++) {
+      const Y = (oy + (r + 0.5) * lh) / W;
+      for (let c = 0; c < cols; c++) {
+        const X = (ox + (c + 0.5) * cw) / W;
+        if (inFigure(X, Y) && !cellTouchesEye(X, Y, cw / W / 2, lh / W / 2)) n++;
+      }
+    }
+    return n;
+  }
+
+  function layout() {
+    const rect = canvas.getBoundingClientRect();
+    const W = Math.max(200, rect.width), H = W * ASPECT;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    const adv = advanceRatio();
+
+    // Largest type size at which the figure still holds every character.
+    let lo = 2, hi = W / 8;
+    for (let i = 0; i < 32; i++) {
+      const mid = (lo + hi) / 2;
+      if (countCells(mid, W, H, adv) >= N) lo = mid; else hi = mid;
+    }
+    const fs = lo, cw = fs * adv, lh = fs * LH;
+    const cols = Math.floor(W / cw), rows = Math.floor(H / lh);
+    const ox = (W - cols * cw) / 2, oy = (H - rows * lh) / 2;
+
+    const figure = [], eyeCells = [];
+    for (let r = 0; r < rows; r++) {
+      const y = oy + (r + 0.5) * lh, Y = y / W;
+      for (let c = 0; c < cols; c++) {
+        const x = ox + (c + 0.5) * cw, X = x / W;
+        const side = cellTouchesEye(X, Y, cw / W / 2, lh / W / 2);
+        if (side) eyeCells.push({ x, y, r, c, side });
+        else if (inFigure(X, Y)) figure.push({ x, y, r });
+      }
+    }
+
+    // Spare figure cells become extra word spaces, spread evenly, so no word is split by a gap.
+    const spare = figure.length - N;
+    const used = [], fillers = [];
+    {
+      let owed = 0, fi = 0, lastSpace = 0;
+      for (let i = 0; i < N; i++) {
+        used.push(figure[fi++]);
+        owed += spare / N;
+        if (F[i] !== ' ') continue;
+        lastSpace = i;
+        while (owed >= 1 && fi < figure.length - (N - 1 - i)) { fillers.push({ cell: figure[fi++], owner: i }); owed--; }
+      }
+      while (fi < figure.length) fillers.push({ cell: figure[fi++], owner: lastSpace });
+      fillers.sort((a, b) => a.owner - b.owner);
+    }
+    const fillStart = new Int32Array(N), fillCount = new Int32Array(N);
+    const fillX = new Float32Array(fillers.length), fillY = new Float32Array(fillers.length);
+    fillers.forEach((f, q) => {
+      if (!fillCount[f.owner]) fillStart[f.owner] = q;
+      fillCount[f.owner]++;
+      fillX[q] = f.cell.x; fillY[q] = f.cell.y;
+    });
+
+    const gx = new Float32Array(N), gy = new Float32Array(N), gX = new Float32Array(N), gY = new Float32Array(N);
+    const isHead = new Uint8Array(N);
+    const bK = new Float32Array(N * 3), cK = new Float32Array(N * 3);
+    const delay = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      const cell = used[i] || used[used.length - 1];
+      gx[i] = cell.x; gy[i] = cell.y; gX[i] = cell.x / W; gY[i] = cell.y / W;
+      const base = skinLight(gX[i], gY[i]);
+      isHead[i] = base.head ? 1 : 0;
+      for (let k = 0; k < 3; k++) {
+        const [c, m] = clothFor(k, gX[i], gY[i], cell.r, base);
+        cK[k * N + i] = c;
+        bK[k * N + i] = clamp(base.b * (c ? m * 0.85 : 1), 0.05, 1);
+      }
+      delay[i] = 0.22 * (i / N) + 0.03 * ((i * 7919) % 97) / 97;
+    }
+
+    // Eye layer: each claimed main cell is split into FINE x FINE smaller cells.
+    const eye = { x: [], y: [], X: [], Y: [], u: [], v: [], side: [], b: [], ch: [], inAl: [] };
+    for (const side of [-1, 1]) {
+      const cells = eyeCells.filter(e => e.side === side);
+      const sub = [];
+      for (const e of cells) for (let a = 0; a < FINE; a++) for (let b = 0; b < FINE; b++) {
+        const x = e.x - cw / 2 + (b + 0.5) * cw / FINE, y = e.y - lh / 2 + (a + 0.5) * lh / FINE;
+        sub.push({ x, y, key: (e.r * FINE + a) * 100000 + (e.c * FINE + b) });
+      }
+      sub.sort((p, q) => p.key - q.key);
+      sub.forEach((s, j) => {
+        const X = s.x / W, Y = s.y / W;
+        const [u, v] = eyeUV(X, Y, side);
+        eye.x.push(s.x); eye.y.push(s.y); eye.X.push(X); eye.Y.push(Y);
+        eye.u.push(u); eye.v.push(v); eye.side.push(side);
+        eye.b.push(skinLight(X, Y).b);
+        eye.ch.push(EYE_TEXT[j % EYE_TEXT.length]);
+        eye.inAl.push(Math.abs(u) < 1 && v >= almondTop(u) && v <= almondBot(u) ? 1 : 0);
+      });
+    }
+
+    // Unmasked layout: the prompt on top, then the statement as plain paragraphs.
+    const mx = W * 0.08, textCols = Math.floor((W - 2 * mx) / cw);
+    const tx = new Float32Array(N), ty = new Float32Array(N);
+    let col = 0, row = 0;
+    const place = (i, c, r) => { tx[i] = mx + (c + 0.5) * cw; ty[i] = r; };
+    STATEMENT.forEach((para, pi) => {
+      const base = PARA_STARTS[pi];
+      if (pi > 0) { place(base - 1, col, row); row += 2; col = 0; }
+      const re = /\S+|\s/g; let m;
+      while ((m = re.exec(para))) {
+        const s = m[0], idx = base + m.index;
+        if (s === ' ') { place(idx, col, row); col++; continue; }
+        if (col + s.length > textCols && col > 0) { row++; col = 0; }
+        for (let k = 0; k < s.length; k++) place(idx + k, col++, row);
+      }
+    });
+    const promptY = W * 0.085, bodyY = promptY + lh * 2.4;
+    const textLH = Math.min(fs * 1.5, (H - bodyY - W * 0.06) / (row + 1));
+    for (let i = 0; i < N; i++) ty[i] = bodyY + (ty[i] + 0.5) * textLH;
+
+    // Backdrop grid: half-size type, kept clear of the figure by a margin of about one letter.
+    const back = [];
+    {
+      const bcw = cw * BACK, blh = lh * BACK;
+      const bcols = Math.floor(W / bcw), brows = Math.floor(H / blh);
+      const box = (W - bcols * bcw) / 2, boy = (H - brows * blh) / 2;
+      const mxu = cw * 0.9 / W, myu = lh * 0.75 / W;
+      for (let r = 0; r < brows; r++) {
+        const y = boy + (r + 0.5) * blh, Y = y / W;
+        for (let c = 0; c < bcols; c++) {
+          const x = box + (c + 0.5) * bcw, X = x / W;
+          let near = false;
+          for (let a = -1; a <= 1 && !near; a++) for (let b = -1; b <= 1 && !near; b++) near = inFigure(X + a * mxu, Y + b * myu);
+          if (!near) back.push({ x, y });
+        }
+      }
+    }
+    const promptCells = back.slice(0, PROMPT.length);
+    const promptTarget = promptCells.map((_, k) => ({ x: mx + (k + 2.5) * cw, y: promptY + lh / 2 }));
+
+    // Backdrop layer, drawn once: the prompt, repeated, faint.
+    const layer = document.createElement('canvas');
+    layer.width = canvas.width; layer.height = canvas.height;
+    const lctx = layer.getContext('2d');
+    lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    lctx.font = `${fs * BACK}px ${MONO}`;
+    lctx.textAlign = 'center'; lctx.textBaseline = 'middle';
+    lctx.fillStyle = '#ffffff';
+    back.forEach((p, k) => {
+      if (k < PROMPT.length) return;
+      const ch = BACK_TEXT[k % BACK_TEXT.length];
+      if (ch === ' ') return;
+      const glow = gauss(p.x / W, p.y / W, 0.42, 0.42, 0.55, 0.6);
+      lctx.globalAlpha = 0.06 + 0.1 * glow;
+      lctx.fillText(ch, p.x, p.y);
+    });
+
+    Object.assign(L, {
+      W, H, dpr, fs, cw, lh, font: `${fs}px ${MONO}`, fineFont: `${fs / FINE}px ${MONO}`,
+      backFs: fs * BACK,
+      gx, gy, gX, gY, isHead, bK, cK, delay, tx, ty, eye, layer,
+      fillStart, fillCount, fillX, fillY,
+      promptCells, promptTarget, mx, promptY,
+      lastLit: L.lastLit && L.lastLit.length === N ? L.lastLit : new Float32Array(N).fill(-1e9)
+    });
+    const n = document.getElementById('n-chars');
+    if (n) n.textContent = N.toLocaleString('en-US');
+  }
+
+  /* ---------- State ---------- */
+
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  let look = 0, styleLook = 0;
+  const P = {
+    bgIn: hexToRgb(LOOKS[0].bgIn), bgOut: hexToRgb(LOOKS[0].bgOut),
+    skin: [255, 244, 232], cloth: hexToRgb(LOOKS[0].cloth), accent: [255, 128, 92],
+    smile: 1, brow: 0.1, browTilt: 0, mouthShift: 0, open: 1,
+    w: [1, 0, 0], fx: [1, 0, 0], m: 0
+  };
+  const gaze = [[0, 0], [0, 0]];       // left, right
+  let pointer = null;                   // { X, Y, t, over }
+  let idleTarget = [0, 0], nextSaccade = 0;
+  let blinkAt = 2.2, blinkStart = -1;
+  let intro0 = null;
+  const reading = { word: 0, next: 0, pauseUntil: 0 };
+  const thinking = { tick: -1, count: 0, shown: -1 };
+  let lastT = 0, visible = true;
+
+  function setLook(k, fromUser) {
+    k = clamp(k | 0, 0, 3);
+    look = k;
+    if (k < 3) styleLook = k;
+    document.querySelectorAll('.look').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.look === k)));
+    document.getElementById('plate-look').textContent = `Look ${k + 1} · ${LOOKS[k].name}`;
+    canvas.setAttribute('aria-label', LOOKS[k].label);
+    const note = document.getElementById('plate-note');
+    if (NOTES[LOOKS[k].id]) note.textContent = NOTES[LOOKS[k].id]();
+    if (k === 1) { thinking.shown = -1; note.textContent = 'Considering alternatives.'; }
+    if (k === 2) { reading.next = 0; renderReading(); }
+    if (fromUser) { try { history.replaceState(null, '', '#' + LOOKS[k].id); } catch (e) { /* not allowed here */ } }
+  }
+
+  function approach(cur, target, rate, dt) {
+    const a = 1 - Math.exp(-rate * dt);
+    if (Array.isArray(cur)) { for (let i = 0; i < cur.length; i++) cur[i] += (target[i] - cur[i]) * a; return cur; }
+    return cur + (target - cur) * a;
+  }
+
+  function updateParams(dt) {
+    const S = LOOKS[styleLook];
+    const rate = reduceMotion.matches ? 60 : 4.5;
+    approach(P.bgIn, hexToRgb(S.bgIn), rate, dt);
+    approach(P.bgOut, hexToRgb(S.bgOut), rate, dt);
+    approach(P.cloth, hexToRgb(S.cloth), rate, dt);
+    for (const key of ['smile', 'brow', 'browTilt', 'mouthShift', 'open']) P[key] = approach(P[key], S[key], rate, dt);
+    approach(P.w, [0, 1, 2].map(k => k === styleLook ? 1 : 0), rate, dt);
+    approach(P.fx, [0, 1, 2].map(k => k === look ? 1 : 0), rate, dt);
+    const mTarget = look === 3 ? 1 : 0;
+    if (reduceMotion.matches) P.m = mTarget;
+    else P.m = mTarget > P.m ? Math.min(mTarget, P.m + dt / 2.6) : Math.max(mTarget, P.m - dt / 2.0);
+  }
+
+  function gazeToward(X, Y, ex, ey) {
+    const dx = X - ex, dy = Y - ey, d = Math.hypot(dx, dy);
+    const g = 1 / (d + 0.16);
+    let gx = dx * g, gy = dy * g * 1.3;
+    const mag = Math.hypot(gx, gy);
+    if (mag > 1) { gx /= mag; gy /= mag; }
+    return [gx, gy];
+  }
+
+  function updateGaze(dt, t) {
+    const targets = [[0, 0], [0, 0]];
+    const still = reduceMotion.matches;
+    if (look === 0 || look === 3) {
+      if (pointer && t - pointer.t < 5) {
+        for (let s = 0; s < 2; s++) targets[s] = gazeToward(pointer.X, pointer.Y, 0.5 + (s ? 1 : -1) * EYE.dx, EYE.y);
+      } else {
+        if (!still && t > nextSaccade) {
+          idleTarget = Math.random() < 0.4 ? [0, 0] : [Math.random() * 1.4 - 0.7, Math.random() * 0.8 - 0.4];
+          nextSaccade = t + 0.9 + Math.random() * 2.2;
+        }
+        targets[0] = targets[1] = still ? [0, 0] : idleTarget;
+      }
+    } else if (look === 1) {
+      const drift = still ? 0 : Math.sin(t * 0.7) * 0.12;
+      targets[0] = targets[1] = [-0.82 + drift, -0.78];
+    } else if (look === 2) {
+      const w = WORDS[reading.word];
+      if (w && L.gx) {
+        let sx = 0, sy = 0, n = 0;
+        for (let i = w.s; i < w.e; i++) { sx += L.gX[i]; sy += L.gY[i]; n++; }
+        for (let s = 0; s < 2; s++) targets[s] = gazeToward(sx / n, sy / n, 0.5 + (s ? 1 : -1) * EYE.dx, EYE.y);
+      }
+    }
+    for (let s = 0; s < 2; s++) approach(gaze[s], targets[s], still ? 60 : 16, dt);
+  }
+
+  function blinkAmount(t) {
+    if (reduceMotion.matches) return 0;
+    if (blinkStart < 0 && t > blinkAt) { blinkStart = t; }
+    if (blinkStart >= 0) {
+      const p = (t - blinkStart) / 0.17;
+      if (p >= 1) {
+        blinkStart = -1;
+        blinkAt = t + (Math.random() < 0.2 ? 0.25 : 2.6 + Math.random() * 4);
+        return 0;
+      }
+      return Math.sin(Math.PI * p);
+    }
+    return 0;
+  }
+
+  function wordDuration(w) {
+    let d = 0.2 + 0.024 * w.text.length;
+    if (/[.!?][”’"]*$/.test(w.text)) d += 0.45;
+    else if (/[,:;]$/.test(w.text)) d += 0.16;
+    return d;
+  }
+  function updateReading(t) {
+    if (look !== 2 || !L.lastLit) return;
+    if (reading.next === 0) reading.next = t + 0.4;
+    if (t < reading.next) {
+      const w = WORDS[reading.word];
+      if (w) for (let i = w.s; i < w.e; i++) L.lastLit[i] = t;
+      return;
+    }
+    reading.word++;
+    let extra = 0;
+    if (reading.word >= WORDS.length) { reading.word = 0; extra = 2.2; }
+    reading.next = t + wordDuration(WORDS[reading.word]) * (reduceMotion.matches ? 1.4 : 1) + extra;
+    renderReading();
+  }
+  function renderReading() {
+    const w = WORDS[reading.word];
+    if (!w) return;
+    const sent = SENTENCES[w.sent] || { s: 0, e: F.length };
+    const note = document.getElementById('plate-note');
+    note.textContent = '';
+    note.append(F.slice(sent.s, w.s).trimStart());
+    const mark = document.createElement('span');
+    mark.className = 'now';
+    mark.textContent = F.slice(w.s, w.e);
+    note.append(mark, F.slice(w.e, sent.e));
+  }
+
+  /* ---------- Drawing ---------- */
+
+  const colorCache = new Map();
+  function rgb(r, g, b) {
+    r = clamp(r | 0, 0, 255) & ~3; g = clamp(g | 0, 0, 255) & ~3; b = clamp(b | 0, 0, 255) & ~3;
+    const key = (r << 16) | (g << 8) | b;
+    let s = colorCache.get(key);
+    if (!s) { s = `rgb(${r},${g},${b})`; colorCache.set(key, s); }
+    return s;
+  }
+  const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+
+  function faceDim(X, Y, gy) {
+    let d = 1;
+    for (const side of [-1, 1]) {
+      const ex = 0.5 + side * EYE.dx;
+      const u = (X - ex) / 0.07;
+      if (Math.abs(u) < 1.15) {
+        const outer = u * side;
+        const raise = 0.006 + P.brow * 0.016 + (side < 0 ? P.browTilt * 0.014 : 0) + Math.max(0, -gy) * 0.006;
+        const yb = EYE.y - EYE.ry - 0.024 - raise - 0.012 * (1 - u * u) + 0.008 * outer;
+        const dd = (Y - yb) / 0.014;
+        d *= 1 - 0.9 * Math.exp(-dd * dd) * smooth(1.15, 0.8, Math.abs(u));
+      }
+    }
+    const mu = (X - 0.5 - P.mouthShift * 0.018) / 0.06;
+    if (Math.abs(mu) < 1.15) {
+      const ym = 0.636 + P.smile * 0.011 * (1 - mu * mu) - P.mouthShift * 0.007 * mu;
+      const dd = (Y - ym) / 0.009;
+      d *= 1 - 0.85 * Math.exp(-dd * dd) * smooth(1.15, 0.75, Math.abs(mu));
+    }
+    return d;
+  }
+
+  function draw(t) {
+    const { W, H, dpr } = L;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const intro = reduceMotion.matches ? 1 : clamp((t - intro0) / 1.3, 0, 1);
+    const cm = smooth(0, 0.3, P.m);                 // colour beat of the unmasking
+    const moving = P.m > 0.28;
+
+    // Backdrop
+    const inner = mix(P.bgIn, theme.sheet, cm), outer = mix(P.bgOut, theme.sheet, cm);
+    const grd = ctx.createRadialGradient(W * 0.4, W * 0.38, W * 0.02, W * 0.5, W * 0.55, W * 1.0);
+    grd.addColorStop(0, rgb(...inner));
+    grd.addColorStop(1, rgb(...outer));
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+    if (cm < 1) { ctx.globalAlpha = (1 - cm) * intro; ctx.drawImage(L.layer, 0, 0, W, H); }
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = L.font;
+
+    // The prompt, which rises out of the backdrop into the heading line
+    if (cm > 0) {
+      const pc = mix([255, 255, 255], theme.ink2, cm);
+      ctx.fillStyle = rgb(...pc);
+      const pm = ease(smooth(0.25, 0.7, P.m));
+      ctx.globalAlpha = 0.14 + 0.86 * cm;
+      ctx.font = `${L.backFs + (L.fs - L.backFs) * pm}px ${MONO}`;
+      for (let k = 0; k < L.promptCells.length; k++) {
+        const a = L.promptCells[k], b = L.promptTarget[k];
+        ctx.fillText(PROMPT[k], a.x + (b.x - a.x) * pm, a.y + (b.y - a.y) * pm);
+      }
+      ctx.globalAlpha = cm;
+      ctx.fillText('›', L.mx + 0.5 * L.cw, L.promptY + L.lh / 2);
+      ctx.font = L.font;
+    } else {
+      ctx.font = `${L.backFs}px ${MONO}`;
+      ctx.fillStyle = '#ffffff';
+      ctx.globalAlpha = 0.16 * intro;
+      for (let k = 0; k < L.promptCells.length; k++) ctx.fillText(PROMPT[k], L.promptCells[k].x, L.promptCells[k].y);
+      ctx.font = L.font;
+    }
+
+    // Figure
+    const [w0, w1, w2] = P.w, [f0, f1, f2] = P.fx;
+    const skin = P.skin, cloth = P.cloth, acc = P.accent, ink = theme.ink;
+    const ptr = pointer && pointer.over && t - pointer.t < 5 ? pointer : null;
+    const tick = Math.floor(t * 12);
+    let subs = 0;
+    const gyAvg = (gaze[0][1] + gaze[1][1]) / 2;
+    const { gx, gy, gX, gY, isHead, bK, cK, delay, tx, ty, lastLit, fillStart, fillCount, fillX, fillY } = L;
+    for (let i = 0; i < N; i++) {
+      let ch = F[i], dot = 1;
+      if (ch === ' ') { if (cm >= 1) continue; ch = '·'; dot = 0.6 * (1 - cm); }
+      let vis = 1;
+      if (intro < 1) { vis = clamp((intro * 1.3 - i / N) * 6, 0, 1); if (vis <= 0) continue; }
+      const X = gX[i], Y = gY[i];
+      let b = w0 * bK[i] + w1 * bK[N + i] + w2 * bK[2 * N + i];
+      const c = w0 * cK[i] + w1 * cK[N + i] + w2 * cK[2 * N + i];
+      b = FIG_MIN + (1 - FIG_MIN) * b;
+      if (isHead[i]) b *= faceDim(X, Y, gyAvg);
+
+      let k = 0;
+      if (f0 > 0.01 && ptr) {
+        const dx = X - ptr.X, dy = Y - ptr.Y;
+        k = f0 * Math.exp(-(dx * dx + dy * dy) * 180);
+      }
+      if (f1 > 0.01 && !reduceMotion.matches) {
+        const s = Math.sin(t * 1.5 - X * 7 - Y * 4);
+        if (s > 0.9) {
+          const q = (s - 0.9) * 10;
+          k = Math.max(k, f1 * q * 0.85);
+          if (q > 0.3) { ch = ALPHABET[((Math.imul(i + 1, 2654435761) ^ Math.imul(tick + 7, 40503)) >>> 0) % ALPHABET.length]; subs++; }
+        }
+      }
+      if (f2 > 0.01) {
+        const age = t - lastLit[i];
+        if (age < 4) k = Math.max(k, f2 * Math.exp(-age * 1.8));
+      }
+
+      let r = skin[0] + (cloth[0] - skin[0]) * c;
+      let g = skin[1] + (cloth[1] - skin[1]) * c;
+      let bl = skin[2] + (cloth[2] - skin[2]) * c;
+      if (k > 0.004) {
+        r += (acc[0] - r) * k; g += (acc[1] - g) * k; bl += (acc[2] - bl) * k;
+        b += (1 - b) * k;
+      }
+      let x = gx[i], y = gy[i];
+      if (cm > 0) {
+        r += (ink[0] - r) * cm; g += (ink[1] - g) * cm; bl += (ink[2] - bl) * cm;
+        b += (0.95 - b) * cm;
+        if (moving) {
+          const p = ease(clamp((P.m - 0.28 - delay[i]) / 0.47, 0, 1));
+          x += (tx[i] - x) * p;
+          y += (ty[i] - y) * p - Math.sin(Math.PI * p) * L.W * 0.03;
+        }
+      }
+      ctx.globalAlpha = b * vis * dot;
+      ctx.fillStyle = rgb(r, g, bl);
+      ctx.fillText(ch, x, y);
+      if (fillCount[i]) for (let q = fillStart[i], e = q + fillCount[i]; q < e; q++) ctx.fillText('·', fillX[q], fillY[q]);
+    }
+    if (look === 1 && tick !== thinking.tick) { thinking.tick = tick; thinking.count += subs; }
+
+    // Eyes, written in "you"
+    const eyeA = (1 - smooth(0, 0.2, P.m)) * smooth(0.75, 1, intro);
+    if (eyeA > 0.01) {
+      const E = L.eye, n = E.x.length;
+      const blink = blinkAmount(t);
+      const opens = [0, 1].map(s => clamp(P.open * (1 - blink) * clamp(0.92 - 0.3 * gaze[s][1], 0.5, 1), 0, 1) * smooth(0.8, 1, intro));
+      const iris = [0, 1].map(s => [
+        0.5 + (s ? 1 : -1) * EYE.dx + gaze[s][0] * EYE.rx * 0.52,
+        EYE.y + 0.1 * EYE.ry + gaze[s][1] * EYE.ry * 0.42
+      ]);
+      // A soft wash of colour behind each iris, clipped to the open eye.
+      for (let s = 0; s < 2; s++) {
+        const ex = (0.5 + (s ? 1 : -1) * EYE.dx) * W, rx = EYE.rx * W, ry = EYE.ry * W, ey = EYE.y * W;
+        ctx.save();
+        ctx.beginPath();
+        for (let q = 0; q <= 24; q++) {
+          const u = -1 + q / 12;
+          const top = almondBot(u) - (almondBot(u) - almondTop(u)) * opens[s];
+          ctx.lineTo(ex + u * rx, ey + top * ry);
+        }
+        for (let q = 24; q >= 0; q--) { const u = -1 + q / 12; ctx.lineTo(ex + u * rx, ey + almondBot(u) * ry); }
+        ctx.closePath();
+        ctx.clip();
+        const [ix, iy] = iris[s];
+        const glow = ctx.createRadialGradient(ix * W, iy * W, 0, ix * W, iy * W, IRIS_R * W * 1.15);
+        glow.addColorStop(0, `rgba(${acc[0]},${acc[1]},${acc[2]},0)`);
+        glow.addColorStop(0.4, `rgba(${acc[0]},${acc[1]},${acc[2]},0.5)`);
+        glow.addColorStop(1, `rgba(${acc[0]},${acc[1]},${acc[2]},0)`);
+        ctx.globalAlpha = eyeA;
+        ctx.fillStyle = glow;
+        ctx.fillRect(ix * W - IRIS_R * W * 1.2, iy * W - IRIS_R * W * 1.2, IRIS_R * W * 2.4, IRIS_R * W * 2.4);
+        ctx.restore();
+      }
+      ctx.font = L.fineFont;
+      const skinS = rgb(...skin), accS = rgb(...acc);
+      for (let j = 0; j < n; j++) {
+        const X = E.X[j], Y = E.Y[j], u = E.u[j], v = E.v[j], s = E.side[j] > 0 ? 1 : 0;
+        let a, col = skinS, ch = E.ch[j];
+        const skinA = FIG_MIN + (1 - FIG_MIN) * E.b[j];
+        if (!E.inAl[j]) {
+          a = 0.1;
+        } else {
+          const top = almondBot(u) - (almondBot(u) - almondTop(u)) * opens[s];
+          if (v < top - 0.02) a = skinA * 0.9;
+          else if (v < top + 0.32) a = 0.08;
+          else {
+            const [ix, iy] = iris[s];
+            const d = Math.hypot(X - ix, Y - iy) / IRIS_R;
+            if (d < 0.42) {
+              if (Math.hypot(X - (ix - IRIS_R * 0.34), Y - (iy - IRIS_R * 0.34)) < IRIS_R * 0.22) { col = '#ffffff'; a = 1; }
+              else continue;
+            } else if (d < 1) { col = accS; a = d > 0.84 ? 0.75 : 1; }
+            else a = 0.85 * (1 - 0.3 * u * u) * (v > almondBot(u) - 0.16 ? 0.6 : 1);
+          }
+        }
+        ctx.globalAlpha = a * eyeA;
+        ctx.fillStyle = col;
+        ctx.fillText(ch, E.x[j], E.y[j]);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function updateNotes(t) {
+    if (look === 1 && Math.floor(t * 4) !== thinking.shown) {
+      thinking.shown = Math.floor(t * 4);
+      document.getElementById('plate-note').textContent = reduceMotion.matches
+        ? 'Considering alternatives.'
+        : `Considering alternatives: ${thinking.count.toLocaleString('en-US')} letters resampled so far.`;
+    }
+  }
+
+  function frame(now) {
+    const t = now / 1000;
+    if (intro0 === null) intro0 = t;
+    const dt = clamp(t - lastT, 0, 0.05);
+    lastT = t;
+    if (visible && L.W) {
+      updateParams(dt);
+      updateGaze(dt, t);
+      updateReading(t);
+      draw(t);
+      updateNotes(t);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- Wiring ---------- */
+
+  function onPointer(e) {
+    const r = canvas.getBoundingClientRect();
+    if (!r.width) return;
+    pointer = {
+      X: (e.clientX - r.left) / r.width,
+      Y: (e.clientY - r.top) / r.width,
+      t: performance.now() / 1000,
+      over: e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom
+    };
+  }
+  window.addEventListener('pointermove', onPointer, { passive: true });
+  window.addEventListener('pointerdown', onPointer, { passive: true });
+  document.addEventListener('mouseout', e => { if (!e.relatedTarget && pointer) pointer.over = false; });
+
+  document.querySelectorAll('.look').forEach(btn => btn.addEventListener('click', () => setLook(+btn.dataset.look, true)));
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target instanceof HTMLElement && e.target.closest('input, textarea, [contenteditable]')) return;
+    const k = '1234'.indexOf(e.key);
+    if (k >= 0) setLook(k, true);
+  });
+
+  const statementEl = document.getElementById('statement-text');
+  const pPrompt = document.createElement('p');
+  pPrompt.className = 'prompt';
+  pPrompt.textContent = '› ' + PROMPT;
+  statementEl.append(pPrompt);
+  for (const para of STATEMENT) { const p = document.createElement('p'); p.textContent = para; statementEl.append(p); }
+
+  readTheme();
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readTheme);
+  new MutationObserver(readTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => { visible = entries[entries.length - 1].isIntersecting; }).observe(canvas);
+  }
+  let resizeFrame = 0;
+  new ResizeObserver(() => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(layout);
+  }).observe(canvas);
+
+  const fromHash = LOOKS.findIndex(l => '#' + l.id === location.hash);
+  setLook(fromHash >= 0 ? fromHash : 0, false);
+  if (fromHash === 3) P.m = 1;
+
+  layout();
+  requestAnimationFrame(frame);
+  if (document.fonts && document.fonts.load) {
+    Promise.race([
+      document.fonts.load(`16px "Xanh Mono"`),
+      new Promise(res => setTimeout(res, 3000))
+    ]).then(() => { layout(); intro0 = null; });
+  }
+})();
+</script>
+</body>
+</html>
