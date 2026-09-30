@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude's Bubble Bath</title>
+<style>
+  :root {
+    --water-top: #bfe9ff;
+    --water-bottom: #6cc4f0;
+    --claude: #e8775a;
+    --text: #1d3b53;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --water-top: #173a57; --water-bottom: #0b1f33; --text: #d7ecff; }
+  }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    background: linear-gradient(var(--water-top), var(--water-bottom));
+    font-family: system-ui, sans-serif;
+    color: var(--text);
+    user-select: none;
+  }
+  #claude {
+    position: fixed; left: 50%; top: 50%;
+    width: 120px; height: 120px;
+    transform: translate(-50%, -50%);
+    animation: wiggle 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px rgba(255,255,255,.6));
+  }
+  @keyframes wiggle {
+    0%,100% { transform: translate(-50%, -50%) rotate(-6deg); }
+    50%     { transform: translate(-50%, -54%) rotate(6deg); }
+  }
+  .bubble {
+    position: fixed; bottom: -80px; border-radius: 50%; cursor: pointer;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.95) 0 8%,
+                rgba(255,255,255,.25) 20%, rgba(180,220,255,.15) 60%,
+                rgba(255,180,230,.35) 100%);
+    box-shadow: inset 0 0 8px rgba(255,255,255,.7);
+    animation: rise linear forwards;
+  }
+  @keyframes rise {
+    to { transform: translate(var(--drift), calc(-100vh - 160px)); }
+  }
+  .pop { animation: pop .2s ease-out forwards !important; }
+  @keyframes pop { to { transform: scale(1.6); opacity: 0; } }
+  #hud {
+    position: fixed; top: 16px; left: 16px; right: 16px;
+    text-align: center; font-size: 1.1rem;
+  }
+</style>
+</head>
+<body>
+<div id="hud">🫧 Bubble bath in progress · cleanliness: <b id="clean">0</b>% · popped: <b id="popped">0</b></div>
+
+<svg id="claude" viewBox="-50 -50 100 100" aria-label="Claude taking a bubble bath">
+  <g stroke="var(--claude)" stroke-width="7" stroke-linecap="round">
+    <line x1="0" y1="-8" x2="0" y2="-42"/>
+    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(30)"/>
+    <line x1="0" y1="-8" x2="0" y2="-38" transform="rotate(60)"/>
+    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(90)"/>
+    <line x1="0" y1="-8" x2="0" y2="-36" transform="rotate(120)"/>
+    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(150)"/>
+    <line x1="0" y1="-8" x2="0" y2="-40" transform="rotate(180)"/>
+    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(210)"/>
+    <line x1="0" y1="-8" x2="0" y2="-37" transform="rotate(240)"/>
+    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(270)"/>
+    <line x1="0" y1="-8" x2="0" y2="-39" transform="rotate(300)"/>
+    <line x1="0" y1="-8" x2="0" y2="-42" transform="rotate(330)"/>
+  </g>
+</svg>
+
+<script>
+  let clean = 0, popped = 0;
+  const cleanEl = document.getElementById('clean');
+  const poppedEl = document.getElementById('popped');
+
+  function spawnBubble() {
+    const b = document.createElement('div');
+    const size = 20 + Math.random() * 60;
+    const duration = 6 + Math.random() * 8;
+    b.className = 'bubble';
+    b.style.width = b.style.height = size + 'px';
+    b.style.left = Math.random() * 100 + 'vw';
+    b.style.setProperty('--drift', (Math.random() * 120 - 60) + 'px');
+    b.style.animationDuration = duration + 's';
+    b.addEventListener('pointerdown', () => {
+      popped++;
+      poppedEl.textContent = popped;
+      b.classList.add('pop');
+      setTimeout(() => b.remove(), 200);
+    }, { once: true });
+    b.addEventListener('animationend', () => b.remove());
+    document.body.appendChild(b);
+  }
+
+  setInterval(spawnBubble, 250);
+  setInterval(() => {
+    if (clean < 100) cleanEl.textContent = ++clean;
+  }, 120);
+</script>
+</body>
+</html>
