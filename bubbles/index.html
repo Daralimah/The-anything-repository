@@ -156,6 +156,11 @@
     return { g, line, spots, len, angle, dirt: 1 };
   });
 
+  // Solid middle, so there's no hole where the tentacles meet.
+  const core = document.createElementNS(SVG, 'circle');
+  core.setAttribute('r', 11);
+  body.appendChild(core);
+
   let popped = 0, wasDone = false;
 
   function render() {
@@ -169,7 +174,9 @@
       if (r.dirt === 0) scrubbed++;
       total += t;
     }
-    const pct = Math.floor(total / rays.length * 100);
+    const avg = total / rays.length;
+    core.setAttribute('fill', `rgb(${CLEAN.map((c, k) => Math.round(DIRTY[k] + (c - DIRTY[k]) * avg))})`);
+    const pct = Math.floor(avg * 100);
     els.clean.textContent = pct;
     els.fill.style.width = pct + '%';
     els.rays.textContent = scrubbed;
